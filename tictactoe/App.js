@@ -24,17 +24,27 @@ export default class App extends React.Component {
 
   initializeGame = () => {
     this.setState({gameState: [
-      [0, 1, 0],
+      [0, 0, 0],
       [0, 0, 0],
       [0, 0, 0]
     ]});
   }
 
   onTilePress = (row, col) => {
+    //Validando los tile para ser presionados una sola vez
+    let value = this.state.gameState[row][col];
+    if(value != 0) {
+      return;
+    }
+    //Activando el evento press
     let currentPlayer = this.state.currentPlayer;
     let matrix = this.state.gameState.slice();
     matrix[row][col] = currentPlayer;
     this.setState({gameState:matrix});
+
+    //Cambiando a otro jugador
+    let nextPlayer = (currentPlayer == 1)? -1 : 1;
+    this.setState({currentPlayer: nextPlayer});
   }
 
   renderIcon = (row, col) => {
