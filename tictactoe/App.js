@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Alert } from 'react-native';
 import {MaterialCommunityIcons as Icon} from 'react-native-vector-icons';
-import { red } from 'ansi-colors';
 
 export default class App extends React.Component {
 
@@ -30,6 +29,61 @@ export default class App extends React.Component {
     ]});
   }
 
+  getWinner = () => {
+    let sum = 0;
+    let numTiles = 3;
+    //rows
+    for (let i = 0; i < numTiles; i++) {
+      sum = this.state.gameState[i][0] + this.state.gameState[i][1] + this.state.gameState[i][2];
+      if (sum === numTiles) {
+        return 1;
+      } else if (sum === (-1 * numTiles)) {
+        return -1;
+      }
+    }
+    //cols
+    for (let i = 0; i < numTiles; i++) {
+      sum = this.state.gameState[0][i] + this.state.gameState[1][i] + this.state.gameState[2][i];
+      if (sum === numTiles) {
+        return 1;
+      } else if (sum === (-1 * numTiles)) {
+        return -1;
+      }
+    }
+    //diagonals
+    //(1)
+    let sumDiagonal = 0;
+    for (let i = 0; i < numTiles; i++) {
+      for (let j = 0; j < numTiles; j++) {
+        if (i === j) {
+          sumDiagonal += this.state.gameState[i][j];
+        }
+      }
+    }
+    if (sumDiagonal === numTiles) {
+      return 1;
+    } else if (sumDiagonal === (-1 * numTiles)) {
+      return -1;
+    }
+    //(2)
+    sumDiagonal = 0;
+    for (let i = 0; i < numTiles; i++) {
+      for (let j = 0; j < numTiles; j++) {
+        if ((i + j) === (numTiles -1)) {
+          sumDiagonal += this.state.gameState[i][j];
+        }
+      }
+    }
+    if (sumDiagonal === numTiles) {
+      return 1;
+    } else if (sumDiagonal === (-1 * numTiles)) {
+      return -1;
+    }
+
+    //No hay ganadores
+    return 0;
+  }
+
   onTilePress = (row, col) => {
     //Validando los tile para ser presionados una sola vez
     let value = this.state.gameState[row][col];
@@ -45,6 +99,16 @@ export default class App extends React.Component {
     //Cambiando a otro jugador
     let nextPlayer = (currentPlayer == 1)? -1 : 1;
     this.setState({currentPlayer: nextPlayer});
+
+    //Verificando si ya hay un ganador
+    let winner = this.getWinner();
+    if (winner === 1) {
+      Alert.alert('El jugador 1 es el ganador');
+      this.initializeGame();
+    } else if (winner === -1) {
+      Alert.alert('El jugador 2 es el ganador');
+      this.initializeGame();
+    }
   }
 
   renderIcon = (row, col) => {
