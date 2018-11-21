@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Alert, Button, Text } from 'react-native';
 import {MaterialCommunityIcons as Icon} from 'react-native-vector-icons';
 
 export default class App extends React.Component {
@@ -27,6 +27,9 @@ export default class App extends React.Component {
       [0, 0, 0],
       [0, 0, 0]
     ]});
+    this.setState({
+      currentPlayer: 1
+    });
   }
 
   getWinner = () => {
@@ -121,8 +124,24 @@ export default class App extends React.Component {
 
   }
   render() {
+    let player;
+    if (this.state.currentPlayer === 1) {
+      player = 'X';
+    }
+    else if (this.state.currentPlayer === -1) {
+      player = 'O';
+    }
     return (
       <View style={styles.container}>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1}}>
+            <Text style={{fontSize: 20}}>Turno de: {player}</Text>
+          </View>
+          <View style={{flex: 0.5, alignItems: 'flex-end'}}>
+            <TouchableOpacity onPress={this.initializeGame} style={styles.buttonReload}><Icon name='reload' style={styles.iconReload}></Icon></TouchableOpacity>
+          </View>
+        </View>        
+        
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity onPress={() => this.onTilePress(0, 0)} style={[styles.tile, {borderLeftWidth: 0, borderTopWidth: 0}]}>
             {this.renderIcon(0, 0)}
@@ -180,5 +199,15 @@ const styles = StyleSheet.create({
   tileO: {
     color: 'green',
     fontSize: 60
+  },
+  buttonReload: {
+    backgroundColor: 'blue',
+    padding: 5,
+    width: 50,
+    alignItems: 'center'
+  },
+  iconReload: {
+    color: '#fff',
+    fontSize: 25
   }
 });
