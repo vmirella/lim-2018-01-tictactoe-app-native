@@ -32,6 +32,20 @@ export default class App extends React.Component {
     });
   }
 
+  //Verifica si el tablero esta lleno --> 1: lleno / 0: hay espacio
+  fullTiles = () => {
+    let flag = 1;
+    let numTiles = 3;
+    for (let i = 0; i < numTiles; i++) {
+      for (let j = 0; j < numTiles; j++) {
+        if (this.state.gameState[i][j] === 0) {
+          flag = 0;
+        }
+      }
+    }
+    return flag;
+  }
+
   getWinner = () => {
     let sum = 0;
     let numTiles = 3;
@@ -84,7 +98,12 @@ export default class App extends React.Component {
     }
 
     //No hay ganadores
-    return 0;
+    let full = this.fullTiles();
+    if (full === 1) {
+      return 2; //Tablero lleno
+    } else {
+      return 0; //Aún hay espacios
+    }    
   }
 
   onTilePress = (row, col) => {
@@ -106,11 +125,11 @@ export default class App extends React.Component {
     //Verificando si ya hay un ganador
     let winner = this.getWinner();
     if (winner === 1) {
-      Alert.alert('El jugador 1 es el ganador');
-      this.initializeGame();
+      Alert.alert('El jugador X es el ganador');
     } else if (winner === -1) {
-      Alert.alert('El jugador 2 es el ganador');
-      this.initializeGame();
+      Alert.alert('El jugador O es el ganador');
+    } else if (winner === 2) {
+      Alert.alert('No hay ganador');
     }
   }
 
@@ -135,7 +154,8 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <View style={{flexDirection: 'row'}}>
           <View style={{flex: 1}}>
-            <Text style={{fontSize: 20}}>Turno de: {player}</Text>
+            <Text style={styles.textTitle}>Tic Tac Toe</Text>
+            <Text style={styles.textPlayer}>Turno de:  {player}</Text>
           </View>
           <View style={{flex: 0.5, alignItems: 'flex-end'}}>
             <TouchableOpacity onPress={this.initializeGame} style={styles.buttonReload}><Icon name='reload' style={styles.iconReload}></Icon></TouchableOpacity>
@@ -183,22 +203,25 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#003432',
     alignItems: 'center',
     justifyContent: 'center'
   },
   tile: {
-    borderWidth: 10,
+    backgroundColor: '#679B99',
+    borderWidth: 2,
+    borderColor: '#fff',
     width: 100,
-    height: 100
+    height: 100,
+    alignItems: 'center'
   },
   tileX: {
     color: 'red',
-    fontSize: 60
+    fontSize: 90
   },
   tileO: {
     color: 'green',
-    fontSize: 60
+    fontSize: 90
   },
   buttonReload: {
     backgroundColor: 'blue',
@@ -209,5 +232,13 @@ const styles = StyleSheet.create({
   iconReload: {
     color: '#fff',
     fontSize: 25
+  },
+  textPlayer: {
+    color: '#fff',
+    fontSize: 20
+  },
+  textTitle: {
+    color: '#fff',
+    fontSize: 30
   }
 });
