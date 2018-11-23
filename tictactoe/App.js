@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Alert, Button, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Alert, Text } from 'react-native';
 import {MaterialCommunityIcons as Icon} from 'react-native-vector-icons';
 
 export default class App extends React.Component {
@@ -13,7 +13,8 @@ export default class App extends React.Component {
         [0, 0, 0],
         [0, 0, 0]
       ],
-      currentPlayer: 1
+      currentPlayer: 1,
+      modalVisible: false
     }
   }
 
@@ -125,11 +126,32 @@ export default class App extends React.Component {
     //Verificando si ya hay un ganador
     let winner = this.getWinner();
     if (winner === 1) {
-      Alert.alert('El jugador X es el ganador');
+      Alert.alert(
+        'Ganador',
+        'El jugador X es el ganador',
+        [
+          {text: 'Reiniciar', onPress: this.initializeGame},
+        ],
+        {cancelable: false}
+      );
     } else if (winner === -1) {
-      Alert.alert('El jugador O es el ganador');
+      Alert.alert(
+        'Ganador',
+        'El jugador O es el ganador',
+        [
+          {text: 'Reiniciar', onPress: this.initializeGame},
+        ],
+        {cancelable: false}
+      );
     } else if (winner === 2) {
-      Alert.alert('No hay ganador');
+      Alert.alert(
+        '',
+        'No hay ganador',
+        [
+          {text: 'Reiniciar', onPress: this.initializeGame},
+        ],
+        {cancelable: false}
+      );
     }
   }
 
